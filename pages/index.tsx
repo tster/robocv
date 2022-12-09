@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import openaiapi from 'openai-api';
 import { useState } from 'react';
 
-const OPENAI_API_KEY = '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';
+const OPENAI_API_KEY = 'API_Key_here';
 
 const OpenAI = require('openai-api');
 
