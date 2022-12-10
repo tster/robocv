@@ -4,33 +4,31 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import openaiapi from 'openai-api';
 import { useState } from 'react';
+require('dotenv').config();
 
-const OPENAI_API_KEY = 'API_Key_here';
+const { Configuration, OpenAIApi } = require("openai");
 
-const OpenAI = require('openai-api');
+const configuration = new Configuration({
+  apiKey: process.env.KEY,
+});
 
-const openai = new OpenAI(OPENAI_API_KEY);
-
+const openai = new OpenAIApi(configuration);
 
 const Home: NextPage = () => {
-  const[coverLetter, setCoverLetter] = useState('');
+  const[coverLetter, setCoverLetter] = useState('Cover letter is generated here');
   const[resume, setResume] = useState('');
   const[jobDescription, setJobDescription] = useState('');
 
   const generateCoverLetter = async () => {
-    const gptResponse = await openai.complete({
-      engine: 'davinci',
-      prompt: `${resume}\n\n${jobDescription}`,
-      maxTokens: 100,
-      temperature: 0.9,
-      topP: 1,
-      presencePenalty: 0,
-      frequencyPenalty: 0,
-      bestOf: 1,
-      n: 1,
-      stream: false
+    console.log("Generating cover letter")
+    const gptResponse = await openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: `Write a convincing 100-word cover letter for the following job ${jobDescription}. Please use informatio from my resume: ${resume}`,
+      max_tokens: 1000
     });
-    setCoverLetter(gptResponse.choices[0].text);
+
+  console.log(gptResponse.data.choices[0].text)
+  setCoverLetter(gptResponse.data.choices[0].text);
 }
 return (
   <div>
